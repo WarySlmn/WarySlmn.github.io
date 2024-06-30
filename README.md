@@ -34,8 +34,6 @@
 
 # Objectif
 
-- Quel est le point douloureux clé ?
-
 Le chef du marketing souhaite identifier les meilleurs YouTubers en 2024 au Royaume-Uni afin de décider avec quels YouTubers il serait préférable de mener des campagnes marketing tout au long de l'année.
 
 - Quelle est la solution idéale ?
@@ -69,8 +67,6 @@ Les données sont extraites de Kaggle (un extrait Excel), [voir ici pour les té
 
 
 # Étapes
-
-- Conception
 - Développement
 - Tests
 - Analyse
@@ -94,19 +90,6 @@ Pour comprendre ce qu'il devrait contenir, nous devons déterminer quelles quest
 Pour l'instant, ce sont quelques-unes des questions auxquelles nous devons répondre, cela peut changer à mesure que nous progressons dans notre analyse.
 
 
-## Maquette du tableau de bord
-
-- À quoi devrait-il ressembler ?
-
-Certains visuels de données appropriés pour répondre à nos questions incluent :
-
-1. Tableau
-2. Treemap (carte thermique)
-3. Cartes de score
-4. Diagramme à barres horizontal
-
-![Maquette du tableau de bord](assets/images/dashboard_mockup.png)
-
 
 ## Outils
 
@@ -116,7 +99,6 @@ Certains visuels de données appropriés pour répondre à nos questions incluen
 | SQL Server   | Nettoyage, tests et analyse des données |
 | Power BI     | Visualisation des données via des tableaux de bord interactifs |
 | GitHub       | Hébergement de la documentation du projet et gestion de version |
-| Mokkup AI    | Conception de la maquette du tableau de bord |
 
 
 # Développement
@@ -209,9 +191,52 @@ FROM
 ### Création de la vue SQL
 
 ```sql
+# 1. Créer une vue pour stocker les données transformées
+# 2. Convertir le nom de la chaîne extrait en VARCHAR(100)
+# 3. Sélectionner les colonnes requises de la table SQL top_uk_youtubers_2024
+*/
+
+-- 1.
+CREATE VIEW view_uk_youtubers_2024 AS
+
+-- 2.
+SELECT
+    CAST(SUBSTRING(NOMBRE, 1, CHARINDEX('@', NOMBRE) -1) AS VARCHAR(100)) AS channel_name, -- 2. 
+    total_subscribers,
+    total_views,
+    total_videos
+
+-- 3.
+FROM
+    top_uk_youtubers_2024
+```
+
+## Test
+. Quels contrôles de qualité des données et de validation allez-vous créer ?
+Voici les tests de qualité des données effectués :
+
+# Vérification du nombre de lignes
+```sql
 /*
-# 1. D'abord, obtenir les données
-# 2. Remarquer que nous avons sélectionnée toutes les informations
- tables et pour voir d'accord plus le
- dass accesser, conflit When connexion 
- wanted help do
+# Compter le nombre total d'enregistrements (ou de lignes) dans la vue SQL
+*/
+
+SELECT
+    COUNT(*) AS no_of_rows
+FROM
+    view_uk_youtubers_2024;
+```
+
+# Vérification du nombre de colonnes
+```sql
+/*
+# Compter le nombre total de colonnes (ou de champs) dans la vue SQL
+*/
+
+SELECT
+    COUNT(*) AS column_count
+FROM
+    INFORMATION_SCHEMA.COLUMNS
+WHERE
+    TABLE_NAME = 'view_uk_youtubers_2024';
+```
